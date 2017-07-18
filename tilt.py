@@ -5,6 +5,7 @@ import time
 import logging
 from datetime import datetime, timedelta
 
+import boto3
 from libsoc_zero.GPIO import Tilt
 from iot.aws import AWSPublisher
 
@@ -37,8 +38,32 @@ publisher = AWSPublisher(log_file=log_file,
 last_notification_sent = datetime.utcnow() + timedelta(hours=-1)
 
 
+def send_sns_notification():
+    global last_notification_sent
+
+    seconds_ago = (datetime.utcnow() - last_notification_sent).seconds
+    if seconds_ago > 600:
+        sns_client = boto3.client(
+            'sns',
+            region_name='us-east-1',
+            aws_access_key_id='MY-ACCESS-KEY',  # change to your access key
+            aws_secret_access_key='secret',  # change to your secret key
+        )
+        sns_client.publish(
+            TopicArn='arn:aws:sns:us-east-1:ACCOUNT:StormDetected',  # change to your topic ARN
+            Message=('Atenção, foram detectados tremores na região dos sensores '
+                     'grande risco de terremoto nos próximos minutos.'),
+            MessageStructure='string',
+            Subject='Alerta de terremoto')
+
+        last_notification_sent = datetime.utcnow()
+    else:
+        logger.info('Notification not sended: seconds_ago={}'.format(seconds_ago))
+
+
 def tilt_event():
     publisher.send({'tilt': 1}, debug=True)
+    send_sns_notification()
     logger.warning("tilt 1")
 
 
