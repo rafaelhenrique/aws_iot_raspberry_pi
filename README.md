@@ -8,6 +8,16 @@ Send sensor data to aws iot
 pip install -r requirements.txt
 ```
 
+# Run script
+
+```
+python temperature.py
+```
+
+# Important note
+
+To send data to topics you need create Thing on AWS IoT. See doc on instructables to create yout Things and acquire your keys on AWS IoT.
+
 # Read docs on instructables
 
 [in construction]
