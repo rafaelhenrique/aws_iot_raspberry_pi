@@ -16,7 +16,7 @@ python temperature.py
 
 # Important note
 
-To send data to topics you need create Thing on AWS IoT. See doc on instructables to create yout Things and acquire your keys on AWS IoT.
+To send data to topics you need create Thing on AWS IoT. See doc on instructables to create your Things and acquire your keys on AWS IoT.
 
 # Read docs on instructables
 
